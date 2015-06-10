@@ -1,10 +1,13 @@
 Package: epiweek
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Convert between dates and epidemiological weeks
 Version: 0.1
 Date: 2015-06-10
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Chris Merkord
+Maintainer: Who to complain to <chris@merkord.com>
+Description: A set of functions for converting between dates and
+epidemiological weeks.
+License: None, for now.
+URL: http://github.com/chrismerkord/epiweek
+BugReports: http://github.com/chrismerkord/epiweek
 LazyData: TRUE
