@@ -5,8 +5,7 @@ Version: 0.1
 Date: 2015-06-10
 Author: Chris Merkord
 Maintainer: Who to complain to <chris@merkord.com>
-Description: A set of functions for converting between dates and
-epidemiological weeks.
+Description: A set of functions for converting between dates and epidemiological weeks.
 License: None, for now.
 URL: http://github.com/chrismerkord/epiweek
 BugReports: http://github.com/chrismerkord/epiweek
