@@ -7,7 +7,7 @@ Author: Chris Merkord
 Maintainer: Who to complain to <chris@merkord.com>
 Description: A set of functions for working with epidemiological weeks.
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.0.0)
 Imports:
     lubridate
 Suggests:
