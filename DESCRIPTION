@@ -1,8 +1,8 @@
-Package: epiweek
+Package: epical
 Type: Package
 Title: Convert between dates and epidemiological weeks/years
 Version: 0.1
-Date: 2015-06-11
+Date: 2015-06-12
 Author: Chris Merkord
 Maintainer: Who to complain to <chris@merkord.com>
 Description: A set of functions for working with epidemiological weeks.
