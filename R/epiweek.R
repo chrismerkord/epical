@@ -26,13 +26,12 @@
 
 epi_week <- function(date) {
 
-  require(lubridate)
   date <- as.Date(date)
   sapply(date, function(x) {
     # wday returns the day of the week as a decimal number (01-07, Sunday is 1)
-    saturday_on_or_after_x <- x + (7 - wday(x))
-    sunday_on_or_before_x <- x - (wday(x) - 1)
-    if (yday(saturday_on_or_after_x) %in% 4:10) {
+    saturday_on_or_after_x <- x + (7 - lubridate::wday(x))
+    sunday_on_or_before_x <- x - (lubridate::wday(x) - 1)
+    if (lubridate::yday(saturday_on_or_after_x) %in% 4:10) {
       # this is by definitation, because  the first epidemiological week of the
       # year ends on the first Saturday of January, provided that it falls at
       # least four days into the month. thus the Saturday ending the first
@@ -42,7 +41,7 @@ epi_week <- function(date) {
       # in the case of the last epi-week of the year, modding the Sat. after
       # would yield an epi-week of 1 instead of 52/53, so instead we have to
       # mod the Sun. before
-      y <- ((yday(sunday_on_or_before_x) + 2) %/% 7) + 1
+      y <- ((lubridate::yday(sunday_on_or_before_x) + 2) %/% 7) + 1
     }
     return(y)
   })
@@ -78,23 +77,22 @@ epi_week <- function(date) {
 
 
 epi_year <- function(date) {
-  require(lubridate)
   date <- as.Date(date)
   sapply(date, function(x) {
     # wday returns the day of the week as a decimal number (01-07, Sunday is 1)
-    saturday_on_or_after_x <- x + (7 - wday(x))
-    sunday_on_or_before_x <- x - (wday(x) - 1)
-    if (yday(saturday_on_or_after_x) %in% 4:10) {
+    saturday_on_or_after_x <- x + (7 - lubridate::wday(x))
+    sunday_on_or_before_x <- x - (lubridate::wday(x) - 1)
+    if (lubridate::yday(saturday_on_or_after_x) %in% 4:10) {
       # this is by definitation, because  the first epidemiological week of the
       # year ends on the first Saturday of January, provided that it falls at
       # least four days into the month. thus the Saturday ending the first
       # epi-week must fall on January 4th through 10th
-      y <- year(saturday_on_or_after_x)
+      y <- lubridate::year(saturday_on_or_after_x)
     } else {
       # in the case of the last epi-week of the year, modding the Sat. after
       # would yield an epi-week of 1 instead of 52/53, so instead we have to
       # mod the Sun. before
-      y <- year(sunday_on_or_before_x)
+      y <- lubridate::year(sunday_on_or_before_x)
     }
     return(y)
   })
@@ -171,6 +169,7 @@ epi_week_start_date <- function(epi_week, epi_year) {
 }
 
 # create a data frame to hold some test data
+library(lubridate)
 library(dplyr)
 library(tidyr)
 df <- data_frame(date=seq(as.Date("2000-12-20"),Sys.Date(),by=1)) %>%
