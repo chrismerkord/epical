@@ -167,28 +167,3 @@ epi_week_start_date <- function(epi_week, epi_year) {
   }
   return(z)
 }
-
-# create a data frame to hold some test data
-library(lubridate)
-library(dplyr)
-library(tidyr)
-df <- data_frame(date=seq(as.Date("2000-12-20"),Sys.Date(),by=1)) %>%
-  mutate(year=year(date),
-         yday=yday(date),
-         weekday=weekdays(date),
-         wday=wday(date),
-         epi_week=epi_week(date),
-         epi_year=epi_year(date)
-         )
-
-# every epi-year should have 364 or 371 days
-df %>%
-  count(epi_year)
-
-# every epi-week + epi-year should have 7 days
-df %>%
-  count(epi_year, epi_week) %>%
-  gather(key, value, epi_year) %>%
-  select(-key) %>%
-  spread(value, n) %>%
-  as.data.frame()
