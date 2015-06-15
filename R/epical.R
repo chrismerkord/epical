@@ -1,3 +1,18 @@
+#' Convert between dates and epidemiological weeks/years.
+#'
+#' epical allows you to calculate back and forth between epi-weeks and
+#' calendar dates.
+#'
+#' To determine which epi-week a calendar date falls in, use
+#' \code{\link{epi_week}}.
+#'
+#' To determine the start date of an epi-week or epi-year, use
+#' \code{\link{epi_week_start_date}} or \code{\link{epi_week_start_date}}.
+#'
+#' @docType package
+#' @name epical
+
+NULL
 
 #' Calculate Epidemiological Weeks from Calendar Dates
 #'
