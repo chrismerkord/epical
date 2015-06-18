@@ -37,15 +37,12 @@ NULL
 #' The function first converts \code{date} to a \code{Date} object using the
 #' function \code{as.Date()}. I welcome suggestions for making this more robust.
 #'
-#' @param gregor_date A vector that can be converted to class \code{Date} using
+#' @param x A Date vector, or another vector that can be converted to Date using
 #' \code{as.Date}
 #' @param ... Additional parameters passed to \code{as.Date}
 #' @return A data frame with columns labeled \code{epi_week} and
 #' \code{epi_year}. The object also has class tbl_df and tbl for use with the
 #' \code{dplyr} package.
-#'
-#' Each item in the parameter vector corresponds to a row in the returned data
-#' frame.
 #'
 #' @examples
 #' epi_week("2015-01-01")
@@ -55,20 +52,20 @@ NULL
 #' @family epi calendar functions
 #'
 
-epi_week <- function(gregor_date) {
+epi_week <- function(x, ...) {
 
   require(dplyr)
   require(lubridate)
 
-  df <- data_frame(gregor_date) %>%
-    mutate(gregor_date = as.Date(gregor_date))
+  df <- data_frame(x) %>%
+    mutate(x = as.Date(x, ...))
 
   # to make the function faster, reduce input to distinct dates befire
   # calculating epi-weeks and epi-years
   df2 <- df %>%
     distinct() %>%
-    mutate(sat_after = gregor_date + (7 - wday(gregor_date)),
-           sun_before = gregor_date - (wday(gregor_date) - 1),
+    mutate(sat_after = x + (7 - wday(x)),
+           sun_before = x - (wday(x) - 1),
            epi_week = NA,
            epi_year = NA)
 

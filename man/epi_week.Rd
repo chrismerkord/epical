@@ -4,10 +4,10 @@
 \alias{epi_week}
 \title{Calculate Epidemiological Weeks from Calendar Dates}
 \usage{
-epi_week(gregor_date)
+epi_week(x, ...)
 }
 \arguments{
-\item{gregor_date}{A vector that can be converted to class \code{Date} using
+\item{x}{A Date vector, or another vector that can be converted to Date using
 \code{as.Date}}
 
 \item{...}{Additional parameters passed to \code{as.Date}}
@@ -16,9 +16,6 @@ epi_week(gregor_date)
 A data frame with columns labeled \code{epi_week} and
 \code{epi_year}. The object also has class tbl_df and tbl for use with the
 \code{dplyr} package.
-
-Each item in the parameter vector corresponds to a row in the returned data
-frame.
 }
 \description{
 Function to calculate the epidemiological week and year in which calendar
