@@ -31,7 +31,7 @@ epi_week_start_date(1:52, 2015)
 epi_week_start_date(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
 }
 \seealso{
-Other epi.calendar.functions: \code{\link{epi_week}};
-  \code{\link{epi_year_start_date}}
+Other epi.calendar.functions: \code{\link{add_epi_week}};
+  \code{\link{epi_week}}; \code{\link{epi_year_start_date}}
 }
 

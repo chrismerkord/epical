@@ -2,7 +2,7 @@
 % Please edit documentation in R/epical.R
 \name{epi_year_start_date}
 \alias{epi_year_start_date}
-\title{Calculate the Start Dates of Epidemiological Years}
+\title{#' Calculate the Start Dates of Epidemiological Years}
 \usage{
 epi_year_start_date(year)
 }
@@ -28,7 +28,7 @@ I'm not sure if it can handle NAs. Some improvements may be needed.
 epi_year_start_date(c(2014,2015))
 }
 \seealso{
-Other epi.calendar.functions: \code{\link{epi_week_start_date}};
-  \code{\link{epi_week}}
+Other epi.calendar.functions: \code{\link{add_epi_week}};
+  \code{\link{epi_week_start_date}}; \code{\link{epi_week}}
 }
 

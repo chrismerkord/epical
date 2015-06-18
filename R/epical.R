@@ -37,49 +37,95 @@ NULL
 #' The function first converts \code{date} to a \code{Date} object using the
 #' function \code{as.Date()}. I welcome suggestions for making this more robust.
 #'
-#' @param date A vector that can be coerced to a \code{Date}
-#' @return A data frame with columns labeled "epi-week" and "epi-year". The
-#' object also has class tbl_df and tbl for those who use the \code{dplyr}
-#' package.
+#' @param gregor_date A vector that can be converted to class \code{Date} using
+#' \code{as.Date}
+#' @param ... Additional parameters passed to \code{as.Date}
+#' @return A data frame with columns labeled \code{epi_week} and
+#' \code{epi_year}. The object also has class tbl_df and tbl for use with the
+#' \code{dplyr} package.
 #'
 #' Each item in the parameter vector corresponds to a row in the returned data
 #' frame.
 #'
 #' @examples
 #' epi_week("2015-01-01")
+#' epi_week("2015-150", format = "%Y-%j")
 #' epi_week(seq(as.Date("2014-12-26"), as.Date("2015-01-12"), by = "day"))
 #'
 #' @family epi calendar functions
 #'
 
-epi_week <- function(date) {
+epi_week <- function(gregor_date) {
 
-  date <- as.Date(date)
-  dplyr::bind_rows(
-    lapply(date, function(x) {
-      # wday returns the day of the week as a decimal number (1-7, Sunday is 1)
-      saturday_on_or_after_x <- x + (7 - lubridate::wday(x))
-      sunday_on_or_before_x <- x - (lubridate::wday(x) - 1)
-      if (lubridate::yday(saturday_on_or_after_x) %in% 4:10) {
-        # this is by definitation, because  the first epidemiological week of
-        # the year ends on the first Saturday of January, provided that it falls
-        # at least four days into the month. thus the Saturday ending the first
-        # epi-week must fall on January 4th through 10th
-        epi_week <- 1
-        epi_year <- lubridate::year(saturday_on_or_after_x)
-      } else {
-        # in the case of the last epi-week of the year, modding the Sat. after
-        # would yield an epi-week of 1 instead of 52/53, so instead we have to
-        # mod the Sun. before
-        epi_week <- ((lubridate::yday(sunday_on_or_before_x) + 2) %/% 7) + 1
-        epi_year <- lubridate::year(sunday_on_or_before_x)
-      }
-      return(data.frame(epi_week, epi_year))
-    })
-  )
+  require(dplyr)
+  require(lubridate)
+
+  df <- data_frame(gregor_date) %>%
+    mutate(gregor_date = as.Date(gregor_date))
+
+  # to make the function faster, reduce input to distinct dates befire
+  # calculating epi-weeks and epi-years
+  df2 <- df %>%
+    distinct() %>%
+    mutate(sat_after = gregor_date + (7 - wday(gregor_date)),
+           sun_before = gregor_date - (wday(gregor_date) - 1),
+           epi_week = NA,
+           epi_year = NA)
+
+  # this is by definitation, because  the first epidemiological week of
+  # the year ends on the first Saturday of January, provided that it falls
+  # at least four days into the month. thus the Saturday ending the first
+  # epi-week must fall on January 4th through 10th
+  case1 <- yday(df2$sat_after) %in% 4:10
+  df2[case1, "epi_week"] <- 1
+  df2[case1, "epi_year"] <- year(df2$sat_after[case1])
+
+  # in the case of the last epi-week of the year, modding the Sat. after
+  # would yield an epi-week of 1 instead of 52/53, so instead we have to
+  # mod the Sun. before
+  case2 <- !(yday(df2$sat_after) %in% 4:10)
+  df2[case2, "epi_week"] <- ((yday(df2$sun_before[case2]) + 2) %/% 7) + 1
+  df2[case2, "epi_year"] <- year(df2$sun_before[case2])
+
+  # merge the data frame of distinct dates back into the original
+  df %>%
+    left_join(df2) %>%
+    select(epi_week, epi_year) # function returns these two columns
 }
 
-#' Calculate the Start Dates of Epidemiological Years
+#' Add Epi-weeks and Epi-years to a Data Frame
+#'
+#' add_epi_week takes a data frame that already contains a date column and adds
+#' columns for epi-week and epi-year.
+#'
+#' If you do not provide the name of the date column in the supplied data frame,
+#' the function looks for a column named "date". If it doesn't find one, it
+#' stops with an error.
+#'#'
+#' @param data A data frame
+#' @param date_col Name of date column
+#' @return A data frame
+#'
+#' @examples
+#' add_epi_week(data.frame(mydate = seq(as.Date("2014-12-26"),
+#'                                  as.Date("2015-01-12"),
+#'                                  by = "day")),
+#'              "mydate")
+#'
+#' @family epi calendar functions
+#'
+
+add_epi_week <- function(data, date_col) {
+  if (!date_col %in% names(data)) stop(date_col, "not found in data frame")
+  require(dplyr)
+  data <-as.data.frame(data)
+  date_vector <- data[, date_col] # change from df to vector
+  bind_cols(data, epi_week(date_vector)) %>% tbl_df() # return merged df
+  # bind_cols was supposed to return a tbl_df but for some reason it didn't, so
+  # we had to change the class manually
+}
+
+#' #' Calculate the Start Dates of Epidemiological Years
 #'
 #' Function to calculate the start dates of epidemiological years.
 #'

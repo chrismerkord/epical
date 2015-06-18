@@ -4,15 +4,18 @@
 \alias{epi_week}
 \title{Calculate Epidemiological Weeks from Calendar Dates}
 \usage{
-epi_week(date)
+epi_week(gregor_date)
 }
 \arguments{
-\item{date}{A vector that can be coerced to a \code{Date}}
+\item{gregor_date}{A vector that can be converted to class \code{Date} using
+\code{as.Date}}
+
+\item{...}{Additional parameters passed to \code{as.Date}}
 }
 \value{
-A data frame with columns labeled "epi-week" and "epi-year". The
-object also has class tbl_df and tbl for those who use the \code{dplyr}
-package.
+A data frame with columns labeled \code{epi_week} and
+\code{epi_year}. The object also has class tbl_df and tbl for use with the
+\code{dplyr} package.
 
 Each item in the parameter vector corresponds to a row in the returned data
 frame.
@@ -42,10 +45,12 @@ function \code{as.Date()}. I welcome suggestions for making this more robust.
 }
 \examples{
 epi_week("2015-01-01")
+epi_week("2015-150", format = "\%Y-\%j")
 epi_week(seq(as.Date("2014-12-26"), as.Date("2015-01-12"), by = "day"))
 }
 \seealso{
-Other epi.calendar.functions: \code{\link{epi_week_start_date}};
+Other epi.calendar.functions: \code{\link{add_epi_week}};
+  \code{\link{epi_week_start_date}};
   \code{\link{epi_year_start_date}}
 }
 
