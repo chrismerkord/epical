@@ -7,7 +7,7 @@
 #' \code{\link{epi_week}}.
 #'
 #' To determine the start date of an epi-week or epi-year, use
-#' \code{\link{epi_week_start_date}} or \code{\link{epi_week_start_date}}.
+#' \code{\link{epi_week_start_date}} or \code{\link{epi_week_start_year}}.
 #'
 #' @docType package
 #' @name epical
@@ -105,7 +105,7 @@ epi_year_start_date <- function(year) {
     possible_dates <- seq(as.Date(paste0(x - 1, "-12-29")),
                           as.Date(paste0(x, "-01-04")),
                           by = "day")
-    possible_dates[min(which(epi_year(possible_dates) == x))]
+    possible_dates[min(which(epi_week(possible_dates)$epi_year == x))]
   })
   class(start_date) <- "Date"  # sapply unlists and drops the class, so put it back
   return(start_date)
@@ -141,7 +141,7 @@ epi_week_start_date <- function(epi_week, epi_year) {
     epi_year_start_date(y) + ((x -1) * 7)
   }, epi_week, epi_year)
   class(z) <- "Date"  # sapply unlists and drops the class, so put it back
-  z[epi_week(z) != epi_week & epi_year(z) != epi_year] <- NA
+  z[epi_week(z)$epi_week != epi_week & epi_week(z)$epi_year != epi_year] <- NA
   if (any(is.na(z))) {
     warning("Some start dates could not be calculated: NAs introduced",
             call. = FALSE, noBreaks. = TRUE)
