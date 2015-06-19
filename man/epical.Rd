@@ -13,6 +13,9 @@ calendar dates.
 To determine which epi-week a calendar date falls in, use
 \code{\link{epi_week}}.
 
+To add columns for epi-week and epi-year to a data frame with a date column,
+use \code{\link{add_epi_week}}.
+
 To determine the start date of an epi-week or epi-year, use
 \code{\link{epi_week_start_date}} or \code{\link{epi_year_start_date}}.
 }
