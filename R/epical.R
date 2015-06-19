@@ -57,15 +57,14 @@ epi_week <- function(x, ...) {
   require(dplyr)
   require(lubridate)
 
-  df <- data_frame(x) %>%
-    mutate(x = as.Date(x, ...))
+  x <- as.Date(x, ...) # convert x to calendar dates
 
   # to make the function faster, reduce input to distinct dates befire
   # calculating epi-weeks and epi-years
-  df2 <- df %>%
+  df2 <- data_frame(x) %>%
     distinct() %>%
-    mutate(sat_after = x + (7 - wday(x)),
-           sun_before = x - (wday(x) - 1),
+    mutate(sat_after = x + (7 - lubridate::wday(x)),
+           sun_before = x - (lubridate::wday(x) - 1),
            epi_week = NA,
            epi_year = NA)
 
@@ -75,17 +74,18 @@ epi_week <- function(x, ...) {
   # epi-week must fall on January 4th through 10th
   case1 <- yday(df2$sat_after) %in% 4:10
   df2[case1, "epi_week"] <- 1
-  df2[case1, "epi_year"] <- year(df2$sat_after[case1])
+  df2[case1, "epi_year"] <- lubridate::year(df2$sat_after[case1])
 
   # in the case of the last epi-week of the year, modding the Sat. after
   # would yield an epi-week of 1 instead of 52/53, so instead we have to
   # mod the Sun. before
   case2 <- !(yday(df2$sat_after) %in% 4:10)
-  df2[case2, "epi_week"] <- ((yday(df2$sun_before[case2]) + 2) %/% 7) + 1
-  df2[case2, "epi_year"] <- year(df2$sun_before[case2])
+  df2[case2, "epi_week"] <- ((lubridate::yday(df2$sun_before[case2])
+                              + 2) %/% 7) + 1
+  df2[case2, "epi_year"] <- lubridate::year(df2$sun_before[case2])
 
   # merge the data frame of distinct dates back into the original
-  df %>%
+  data_frame(x) %>%
     left_join(df2) %>%
     select(epi_week, epi_year) # function returns these two columns
 }
@@ -114,10 +114,9 @@ epi_week <- function(x, ...) {
 
 add_epi_week <- function(data, date_col) {
   if (!date_col %in% names(data)) stop(date_col, "not found in data frame")
-  require(dplyr)
   data <-as.data.frame(data)
   date_vector <- data[, date_col] # change from df to vector
-  bind_cols(data, epi_week(date_vector)) %>% tbl_df() # return merged df
+  dplyr::bind_cols(data, epi_week(date_vector)) %>% dplyr::tbl_df() # return merged df
   # bind_cols was supposed to return a tbl_df but for some reason it didn't, so
   # we had to change the class manually
 }
