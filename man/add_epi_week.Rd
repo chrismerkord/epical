@@ -4,12 +4,14 @@
 \alias{add_epi_week}
 \title{Add Epi-weeks and Epi-years to a Data Frame}
 \usage{
-add_epi_week(data, date_col)
+add_epi_week(data, date_col, ...)
 }
 \arguments{
 \item{data}{A data frame}
 
 \item{date_col}{Name of date column}
+
+\item{...}{Additional parameters passed to \code{as.Date}}
 }
 \value{
 A data frame

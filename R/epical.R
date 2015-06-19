@@ -104,6 +104,7 @@ epi_week <- function(x, ...) {
 #'#'
 #' @param data A data frame
 #' @param date_col Name of date column
+#' @param ... Additional parameters passed to \code{as.Date}
 #' @return A data frame
 #'
 #' @examples
@@ -115,11 +116,11 @@ epi_week <- function(x, ...) {
 #' @family epi calendar functions
 #'
 
-add_epi_week <- function(data, date_col) {
+add_epi_week <- function(data, date_col, ...) {
   if (!date_col %in% names(data)) stop(date_col, "not found in data frame")
   data <-as.data.frame(data)
   date_vector <- data[, date_col] # change from df to vector
-  dplyr::bind_cols(data, epi_week(date_vector)) %>% dplyr::tbl_df() # return merged df
+  dplyr::bind_cols(data, epi_week(date_vector, ...)) %>% dplyr::tbl_df() # return merged df
   # bind_cols was supposed to return a tbl_df but for some reason it didn't, so
   # we had to change the class manually
 }
