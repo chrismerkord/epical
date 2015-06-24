@@ -10,7 +10,7 @@
 #' use \code{\link{add_epi_week}}.
 #'
 #' To determine the start date of an epi-week or epi-year, use
-#' \code{\link{epi_week_start_date}} or \code{\link{epi_year_start_date}}.
+#' \code{\link{epi_week_start}} or \code{\link{epi_year_start}}.
 #'
 #' @docType package
 #' @name epical
@@ -141,12 +141,12 @@ add_epi_week <- function(data, date_col, ...) {
 #' @return A \code{Date} vector
 #'
 #' @examples
-#' epi_year_start_date(c(2014,2015))
+#' epi_year_start(c(2014,2015))
 #'
 #' @family epi calendar functions
 #'
 
-epi_year_start_date <- function(year) {
+epi_year_start <- function(year) {
   start_date <- sapply(year, function(x) {
     possible_dates <- seq(as.Date(paste0(x - 1, "-12-29")),
                           as.Date(paste0(x, "-01-04")),
@@ -173,18 +173,18 @@ epi_year_start_date <- function(year) {
 #' @return A \code{Date} vector
 #'
 #' @examples
-#' epi_week_start_date(1, 2010:2015)
-#' epi_week_start_date(1:52, 2015)
-#' epi_week_start_date(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
+#' epi_week_start(1, 2010:2015)
+#' epi_week_start(1:52, 2015)
+#' epi_week_start(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
 #'
 #' @family epi calendar functions
 #'
 
-epi_week_start_date <- function(epi_week, epi_year) {
+epi_week_start <- function(epi_week, epi_year) {
   epi_week <- as.numeric(epi_week)
   epi_year <- as.numeric(epi_year)
   z <- mapply(function(x, y) {
-    epi_year_start_date(y) + ((x -1) * 7)
+    epi_year_start(y) + ((x -1) * 7)
   }, epi_week, epi_year)
   class(z) <- "Date"  # sapply unlists and drops the class, so put it back
   z[epi_week(z)$epi_week != epi_week & epi_week(z)$epi_year != epi_year] <- NA

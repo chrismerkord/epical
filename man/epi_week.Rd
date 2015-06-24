@@ -47,7 +47,7 @@ epi_week(seq(as.Date("2014-12-26"), as.Date("2015-01-12"), by = "day"))
 }
 \seealso{
 Other epi.calendar.functions: \code{\link{add_epi_week}};
-  \code{\link{epi_week_start_date}};
-  \code{\link{epi_year_start_date}}
+  \code{\link{epi_week_start}};
+  \code{\link{epi_year_start}}
 }
 
