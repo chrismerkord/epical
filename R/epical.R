@@ -88,9 +88,11 @@ epi_week <- function(x, ...) {
   df2[case2, "epi_year"] <- lubridate::year(df2$sun_before[case2])
 
   # merge the data frame of distinct dates back into the original
-  data_frame(x) %>%
+  suppressMessages(
+    data_frame(x) %>%
     left_join(df2) %>%
     select(epi_week, epi_year) # function returns these two columns
+  )
 }
 
 #' Add Epi-weeks and Epi-years to a Data Frame
@@ -199,6 +201,8 @@ epi_week_start <- function(epi_week, epi_year) {
             call. = FALSE, noBreaks. = TRUE)
   }
   df_distinct <- df_distinct %>% mutate(z)
-  df_full <- df_full %>% left_join(df_distinct)
+  df_full <- suppressMessages(
+    df_full %>% left_join(df_distinct)
+  )
   return(df_full$z)
 }
