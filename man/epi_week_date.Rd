@@ -33,7 +33,7 @@ week, or any other arbitrary amount.
 epi_week_date(1, 2010:2015)
 epi_week_date(1:52, 2015)
 epi_week_date(1:52, 2015, offset = 6) # return epi week end dates
-epi_week_date(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
+epi_week_date(c(-1, 0, TRUE, 52, 53, 999, "a", NA), 2015) # NAs
 }
 \seealso{
 Other epi.calendar.functions: \code{\link{add_epi_week}};

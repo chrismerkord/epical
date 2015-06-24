@@ -180,32 +180,31 @@ epi_year_start <- function(year) {
 #' epi_week_date(1, 2010:2015)
 #' epi_week_date(1:52, 2015)
 #' epi_week_date(1:52, 2015, offset = 6) # return epi week end dates
-#' epi_week_date(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
+#' epi_week_date(c(-1, 0, TRUE, 52, 53, 999, "a", NA), 2015) # NAs
 #'
 #' @family epi calendar functions
 #'
 
 epi_week_date <- function(epi_week, epi_year, offset = 0) {
   df_full <- dplyr::data_frame(epi_week, epi_year)
-  df_distinct <- df_full %>%
-    dplyr::distinct() %>%
-    dplyr::mutate(epi_week = as.numeric(epi_week),
-                  epi_year = as.numeric(epi_year))
-  epi_week <- as.numeric(epi_week)
-  epi_year <- as.numeric(epi_year)
+  na_rows_input <- nrow(df_full) - sum(complete.cases(df_full))
+  df_distinct <- df_full %>% dplyr::distinct()
   z <- mapply(function(x, y) {
     epi_year_start(y) + ((x -1) * 7)
-  }, df_distinct$epi_week, df_distinct$epi_year)
+  }, suppressWarnings(as.numeric(df_distinct$epi_week)),
+  suppressWarnings(as.numeric(df_distinct$epi_year)))
   class(z) <- "Date"  # sapply unlists and drops the class, so put it back
   z[epi_week(z)$epi_week != df_distinct$epi_week &
       epi_week(z)$epi_year != df_distinct$epi_year] <- NA
-  if (any(is.na(z))) {
-    warning("Some start dates could not be calculated: NAs introduced",
-            call. = FALSE, noBreaks. = TRUE)
-  }
   df_distinct <- df_distinct %>% mutate(epi_date = z + offset)
   df_full <- suppressMessages(
     df_full %>% left_join(df_distinct)
   )
+  na_rows_output <- nrow(df_full) - sum(complete.cases(df_full))
+  nas_created <- na_rows_output - na_rows_input
+  if (nas_created) {
+    message("Some epi-weeks could not be coerced to dates: ",
+            nas_created, " additional NAs returned")
+  }
   return(df_full$epi_date)
 }
