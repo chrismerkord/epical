@@ -33,7 +33,7 @@ add_epi_week(data.frame(mydate = seq(as.Date("2014-12-26"),
              "mydate")
 }
 \seealso{
-Other epi.calendar.functions: \code{\link{epi_week_start}};
+Other epi.calendar.functions: \code{\link{epi_week_date}};
   \code{\link{epi_week}}; \code{\link{epi_year_start}}
 }
 

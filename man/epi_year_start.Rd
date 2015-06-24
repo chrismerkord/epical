@@ -29,6 +29,6 @@ epi_year_start(c(2014,2015))
 }
 \seealso{
 Other epi.calendar.functions: \code{\link{add_epi_week}};
-  \code{\link{epi_week_start}}; \code{\link{epi_week}}
+  \code{\link{epi_week_date}}; \code{\link{epi_week}}
 }
 

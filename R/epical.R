@@ -10,7 +10,7 @@
 #' use \code{\link{add_epi_week}}.
 #'
 #' To determine the start date of an epi-week or epi-year, use
-#' \code{\link{epi_week_start}} or \code{\link{epi_year_start}}.
+#' \code{\link{epi_week_date}} or \code{\link{epi_year_start}}.
 #'
 #' @docType package
 #' @name epical
@@ -172,17 +172,22 @@ epi_year_start <- function(year) {
 #'
 #' @param epi_week An object that can be coerced to a \code{numeric}
 #' @param epi_year An object that can be coerced to a \code{numeric}
+#' @param offset A number of days to offset the returned dates by. The default
+#' is 0 in which case the function returns the date of the first day of each
+#' epi week. An offset of 6 would instead return the date of the last day of
+#' each epi week.
 #' @return A \code{Date} vector
 #'
 #' @examples
-#' epi_week_start(1, 2010:2015)
-#' epi_week_start(1:52, 2015)
-#' epi_week_start(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
+#' epi_week_date(1, 2010:2015)
+#' epi_week_date(1:52, 2015)
+#' epi_week_date(1:52, 2015, offset = 6) # return epi week end dates
+#' epi_week_date(c(-1, 0, TRUE, 52, 53, 999, "a"), 2015) # NAs
 #'
 #' @family epi calendar functions
 #'
 
-epi_week_start <- function(epi_week, epi_year) {
+epi_week_date <- function(epi_week, epi_year, offset = 0) {
   df_full <- dplyr::data_frame(epi_week, epi_year)
   df_distinct <- df_full %>%
     dplyr::distinct() %>%
@@ -200,9 +205,9 @@ epi_week_start <- function(epi_week, epi_year) {
     warning("Some start dates could not be calculated: NAs introduced",
             call. = FALSE, noBreaks. = TRUE)
   }
-  df_distinct <- df_distinct %>% mutate(z)
+  df_distinct <- df_distinct %>% mutate(epi_date = z + offset)
   df_full <- suppressMessages(
     df_full %>% left_join(df_distinct)
   )
-  return(df_full$z)
+  return(df_full$epi_date)
 }
