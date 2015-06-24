@@ -2,7 +2,7 @@
 % Please edit documentation in R/epical.R
 \name{epi_week}
 \alias{epi_week}
-\title{Calculate Epidemiological Weeks from Calendar Dates}
+\title{Date Conversion to Epidemiological Weeks}
 \usage{
 epi_week(x, ...)
 }
@@ -18,8 +18,7 @@ A data frame with columns labeled \code{epi_week} and
 \code{dplyr} package.
 }
 \description{
-Function to calculate the epidemiological week and year in which calendar
-dates fall.
+Function to calculate the epidemiological weeks in which calendar dates fall.
 }
 \details{
 Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a

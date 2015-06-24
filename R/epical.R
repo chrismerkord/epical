@@ -17,10 +17,9 @@
 
 NULL
 
-#' Calculate Epidemiological Weeks from Calendar Dates
+#' Date Conversion to Epidemiological Weeks
 #'
-#' Function to calculate the epidemiological week and year in which calendar
-#' dates fall.
+#' Function to calculate the epidemiological weeks in which calendar dates fall.
 #'
 #' Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
 #' standardized method of assigning days to a week of the year. Epi-weeks are
@@ -127,15 +126,15 @@ add_epi_week <- function(data, date_col, ...) {
   # we had to change the class manually
 }
 
-#' #' Calculate the Start Dates of Epidemiological Years
+#' #' Start Dates of Epidemiological Years
 #'
 #' Function to calculate the start dates of epidemiological years.
 #'
-#' Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
-#' standardized method of assigning days to a week of the year. The first
-#' epi-week always begins on the Sunday that falls in the range of December
-#' 29 to January 4. This function determines which date the first day of
-#' epi-week 1 falls in.
+#' The first epi-week always begins on the Sunday that falls in the range of
+#' December 29 to January 4. This function determines which date of the first
+#' day of epi-week 1. Note that the year of the returned date may not be the
+#' same as the year provided, in cases where epi-week 1 begins in December of
+#' the previous year.
 #'
 #' I'm not sure if it can handle NAs. Some improvements may be needed.
 #'
@@ -159,14 +158,13 @@ epi_year_start <- function(year) {
   return(start_date)
 }
 
-#' Calculate the Start Dates of Epidemiological Weeks
+#' Date Conversion from Epidemiological Weeks
 #'
-#' Function to calculate the start dates of epidemiological weeks.
+#' Function to calculate dates from epidemiological weeks.
 #'
-#' Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
-#' standardized method of assigning days to a week of the year. This function
-#' determines the start date of a given set of epi-weeks identified by epi-week
-#' number and year.
+#' This function determines the date of the first day of each epi-week,
+#' optionally adding an offset to calculate the date of the last day of the
+#' week, or any other arbitrary amount.
 #'
 #' \code{epi_week} and \code{epi_year} are recycled if necessary.
 #'

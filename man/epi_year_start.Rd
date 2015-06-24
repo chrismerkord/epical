@@ -2,7 +2,7 @@
 % Please edit documentation in R/epical.R
 \name{epi_year_start}
 \alias{epi_year_start}
-\title{#' Calculate the Start Dates of Epidemiological Years}
+\title{#' Start Dates of Epidemiological Years}
 \usage{
 epi_year_start(year)
 }
@@ -16,11 +16,11 @@ A \code{Date} vector
 Function to calculate the start dates of epidemiological years.
 }
 \details{
-Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
-standardized method of assigning days to a week of the year. The first
-epi-week always begins on the Sunday that falls in the range of December
-29 to January 4. This function determines which date the first day of
-epi-week 1 falls in.
+The first epi-week always begins on the Sunday that falls in the range of
+December 29 to January 4. This function determines which date of the first
+day of epi-week 1. Note that the year of the returned date may not be the
+same as the year provided, in cases where epi-week 1 begins in December of
+the previous year.
 
 I'm not sure if it can handle NAs. Some improvements may be needed.
 }

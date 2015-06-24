@@ -2,7 +2,7 @@
 % Please edit documentation in R/epical.R
 \name{epi_week_date}
 \alias{epi_week_date}
-\title{Calculate the Start Dates of Epidemiological Weeks}
+\title{Date Conversion from Epidemiological Weeks}
 \usage{
 epi_week_date(epi_week, epi_year, offset = 0)
 }
@@ -20,13 +20,12 @@ each epi week.}
 A \code{Date} vector
 }
 \description{
-Function to calculate the start dates of epidemiological weeks.
+Function to calculate dates from epidemiological weeks.
 }
 \details{
-Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
-standardized method of assigning days to a week of the year. This function
-determines the start date of a given set of epi-weeks identified by epi-week
-number and year.
+This function determines the date of the first day of each epi-week,
+optionally adding an offset to calculate the date of the last day of the
+week, or any other arbitrary amount.
 
 \code{epi_week} and \code{epi_year} are recycled if necessary.
 }
