@@ -181,16 +181,24 @@ epi_year_start <- function(year) {
 #'
 
 epi_week_start <- function(epi_week, epi_year) {
+  df_full <- dplyr::data_frame(epi_week, epi_year)
+  df_distinct <- df_full %>%
+    dplyr::distinct() %>%
+    dplyr::mutate(epi_week = as.numeric(epi_week),
+                  epi_year = as.numeric(epi_year))
   epi_week <- as.numeric(epi_week)
   epi_year <- as.numeric(epi_year)
   z <- mapply(function(x, y) {
     epi_year_start(y) + ((x -1) * 7)
-  }, epi_week, epi_year)
+  }, df_distinct$epi_week, df_distinct$epi_year)
   class(z) <- "Date"  # sapply unlists and drops the class, so put it back
-  z[epi_week(z)$epi_week != epi_week & epi_week(z)$epi_year != epi_year] <- NA
+  z[epi_week(z)$epi_week != df_distinct$epi_week &
+      epi_week(z)$epi_year != df_distinct$epi_year] <- NA
   if (any(is.na(z))) {
     warning("Some start dates could not be calculated: NAs introduced",
             call. = FALSE, noBreaks. = TRUE)
   }
-  return(z)
+  df_distinct <- df_distinct %>% mutate(z)
+  df_full <- df_full %>% left_join(df_distinct)
+  return(df_full$z)
 }
