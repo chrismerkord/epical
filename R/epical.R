@@ -1,7 +1,28 @@
 #' Convert between dates and epidemiological weeks/years.
 #'
-#' epical allows you to calculate back and forth between epi-weeks and
-#' calendar dates.
+#' epical allows you to calculate back and forth between epidemiological weeks
+#' and calendar dates.
+#'
+#' Epidemiological weeks, also called "epi-weeks", "epi weeks", or "MMWR weeks"
+#' are a standardized method of assigning days to a week of the year.
+#' Epidemiological weeks are used by the WHO, CDC, and many other health
+#' organizations.
+#'
+#' The WHO defines epidemiological weeks as starting on a Monday and ending on a
+#' Sunday. The CDC defines epidemiological weeks as starting on a Sunday and
+#' ending on a Saturday. In either case, the end of the first epidemiological
+#' week of the year by definition must fall at least four days into the year. In
+#' other words, the first epidemiological week always begins on a date between
+#' December 29 and January 4.
+#'
+#' Every date can be assigned to a 7-day-long epidemiological week. Most years
+#' have 52 epidemiological weeks, but some have 53.
+#'
+#' Because some dates in epidemiological week 1 can fall within the previous
+#' calendar year, and dates in epidemiological week 52/53 can fall within the
+#' subsequent calendar year, it is necessary to specify both the epidemiological
+#' week number and an "epidemiological year" so that dates can be grouped
+#' correctly by year.
 #'
 #' To determine which epi-week a calendar date falls in, use
 #' \code{\link{epi_week}}.
@@ -19,28 +40,16 @@ NULL
 
 #' Date Conversion to Epidemiological Weeks
 #'
-#' Function to calculate the epidemiological weeks in which calendar dates fall.
-#'
-#' Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
-#' standardized method of assigning days to a week of the year. Epi-weeks are
-#' used by the WHO, CDC, and many other health organizations.
-#'
-#' Here we define an epi-week as starting on a Sunday and ending on a Saturday,
-#' with the first epi-week of the year ending on the first Saturday of the year
-#' that falls at least four days into the year. In other words, the first
-#' epi-week always begins on the Sunday that falls in the range of December 29
-#' to January 4.
-#'
-#' Because some dates in epi-week 1 can fall within the previous
-#' calendar year, and dates in epi-week 52/53 can fall within the next calendar
-#' year, it is necessary to specify both the epi-week number and an
-#' "epi-year" so that dates can be grouped correctly.
+#' Function to calculate the epidemiological weeks in which one or more calendar
+#' dates fall.
 #'
 #' The function first converts \code{date} to a \code{Date} object using the
 #' function \code{as.Date()}. I welcome suggestions for making this more robust.
 #'
 #' @param x A Date vector, or another vector that can be converted to Date using
 #' \code{as.Date}
+#' @param system Either "who" or "cdc". WHO epidemiological weeks start on
+#' Monday. CDC epidemiological weeks (MMWR weeks) start on Sunday
 #' @param ... Additional parameters passed to \code{as.Date}
 #' @return A data frame with columns labeled \code{epi_week} and
 #' \code{epi_year}. The object also has class tbl_df and tbl for use with the
@@ -52,39 +61,44 @@ NULL
 #' epi_week(seq(as.Date("2014-12-26"), as.Date("2015-01-12"), by = "day"))
 #'
 #' @family epi calendar functions
-#'
 
-epi_week <- function(x, ...) {
+epi_week <- function(x, system = "who", ...) {
 
   require(dplyr)
   require(lubridate)
 
   x <- as.Date(x, ...) # convert x to calendar dates
 
-  # to make the function faster, reduce input to distinct dates befire
+  # figure out how many days to shift the start of the week by
+  if(system == "who") shift <- 1 else {
+    if(system == "cdc") shift <- 0  else {
+      stop("Argument 'system' must be one of c(\"who\", \"cdc\")")
+    }
+  }
+
+  # to make the function faster, reduce input to distinct dates before
   # calculating epi-weeks and epi-years
-  df2 <- data_frame(x) %>%
+  df2 <-
+    data_frame(x) %>%
     distinct() %>%
-    mutate(sat_after = x + (7 - lubridate::wday(x)),
-           sun_before = x - (lubridate::wday(x) - 1),
-           epi_week = NA,
-           epi_year = NA)
-
-  # this is by definitation, because  the first epidemiological week of
-  # the year ends on the first Saturday of January, provided that it falls
-  # at least four days into the month. thus the Saturday ending the first
-  # epi-week must fall on January 4th through 10th
-  case1 <- yday(df2$sat_after) %in% 4:10
-  df2[case1, "epi_week"] <- 1
-  df2[case1, "epi_year"] <- lubridate::year(df2$sat_after[case1])
-
-  # in the case of the last epi-week of the year, modding the Sat. after
-  # would yield an epi-week of 1 instead of 52/53, so instead we have to
-  # mod the Sun. before
-  case2 <- !(yday(df2$sat_after) %in% 4:10)
-  df2[case2, "epi_week"] <- ((lubridate::yday(df2$sun_before[case2])
-                              + 2) %/% 7) + 1
-  df2[case2, "epi_year"] <- lubridate::year(df2$sun_before[case2])
+    mutate(
+      wday = wday(x - shift),                     # WHO: Mon.==1; CDC: Sun.==1
+      week_start_date = x - (wday - 1),           # start of week containing x
+      week_end_date = week_start_date + 6,        # end of week containing x
+      week_start_yday = yday(week_end_date),
+      week_end_yday = yday(week_end_date),
+      # because start date could fall in prev year, use end date to identify epi
+      # week 1. use start date to identify all other epi weeks
+      epi_week = ifelse(
+        week_end_yday %in% 4:10, 1,
+        ((week_start_yday + 2) %/% 7) + 1
+      ),
+      epi_year = ifelse(
+        week_end_yday %in% 4:10,
+        year(week_end_date),
+        year(week_start_date)
+      )
+    )
 
   # merge the data frame of distinct dates back into the original
   suppressMessages(
