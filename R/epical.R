@@ -156,6 +156,8 @@ add_epi_week <- function(data, date_col, system = "who", ...) {
 #' I'm not sure if it can handle NAs. Some improvements may be needed.
 #'
 #' @param year An object that can be coerced to a \code{numeric}
+#' @param system Either "who" or "cdc". Defauly is "who".
+#' See \code{\link{epi_week}} for details.
 #' @return A \code{Date} vector
 #'
 #' @examples
@@ -164,12 +166,12 @@ add_epi_week <- function(data, date_col, system = "who", ...) {
 #' @family epi calendar functions
 #'
 
-epi_year_start <- function(year) {
+epi_year_start <- function(year, system = "who") {
   start_date <- sapply(year, function(x) {
     possible_dates <- seq(as.Date(paste0(x - 1, "-12-29")),
                           as.Date(paste0(x, "-01-04")),
                           by = "day")
-    possible_dates[min(which(epi_week(possible_dates)$epi_year == x))]
+    possible_dates[min(which(epi_week(possible_dates, system)$epi_year == x))]
   })
   class(start_date) <- "Date"  # sapply unlists and drops the class, so put it back
   return(start_date)
@@ -191,6 +193,8 @@ epi_year_start <- function(year) {
 #' is 0 in which case the function returns the date of the first day of each
 #' epi week. An offset of 6 would instead return the date of the last day of
 #' each epi week.
+#' @param system Either "who" or "cdc". Defauly is "who".
+#' See \code{\link{epi_week}} for details.
 #' @return A \code{Date} vector
 #'
 #' @examples
@@ -202,7 +206,7 @@ epi_year_start <- function(year) {
 #' @family epi calendar functions
 #'
 
-epi_week_date <- function(epi_week, epi_year, offset = 0) {
+epi_week_date <- function(epi_week, epi_year, offset = 0, system = "who") {
   df_full <- dplyr::data_frame(epi_week, epi_year)
   na_rows_input <- nrow(df_full) - sum(complete.cases(df_full))
   df_distinct <- df_full %>% dplyr::distinct()
@@ -212,7 +216,7 @@ epi_week_date <- function(epi_week, epi_year, offset = 0) {
   suppressWarnings(as.numeric(df_distinct$epi_year)))
   class(z) <- "Date"  # sapply unlists and drops the class, so put it back
   z[epi_week(z)$epi_week != df_distinct$epi_week &
-      epi_week(z)$epi_year != df_distinct$epi_year] <- NA
+      epi_week(z, system)$epi_year != df_distinct$epi_year] <- NA
   df_distinct <- df_distinct %>% mutate(epi_date = z + offset)
   df_full <- suppressMessages(
     df_full %>% left_join(df_distinct)
