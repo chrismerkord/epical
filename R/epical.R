@@ -211,11 +211,11 @@ epi_week_date <- function(epi_week, epi_year, offset = 0, system = "who") {
   na_rows_input <- nrow(df_full) - sum(complete.cases(df_full))
   df_distinct <- df_full %>% dplyr::distinct()
   z <- mapply(function(x, y) {
-    epi_year_start(y) + ((x -1) * 7)
+    epi_year_start(y, system) + ((x -1) * 7)
   }, suppressWarnings(as.numeric(df_distinct$epi_week)),
   suppressWarnings(as.numeric(df_distinct$epi_year)))
   class(z) <- "Date"  # sapply unlists and drops the class, so put it back
-  z[epi_week(z)$epi_week != df_distinct$epi_week &
+  z[epi_week(z, system)$epi_week != df_distinct$epi_week &
       epi_week(z, system)$epi_year != df_distinct$epi_year] <- NA
   df_distinct <- df_distinct %>% mutate(epi_date = z + offset)
   df_full <- suppressMessages(
