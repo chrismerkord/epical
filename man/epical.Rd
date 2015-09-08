@@ -6,10 +6,31 @@
 \alias{epical-package}
 \title{Convert between dates and epidemiological weeks/years.}
 \description{
-epical allows you to calculate back and forth between epi-weeks and
-calendar dates.
+epical allows you to calculate back and forth between epidemiological weeks
+and calendar dates.
 }
 \details{
+Epidemiological weeks, also called "epi-weeks", "epi weeks", or "MMWR weeks"
+are a standardized method of assigning days to a week of the year.
+Epidemiological weeks are used by the WHO, CDC, and many other health
+organizations.
+
+The WHO defines epidemiological weeks as starting on a Monday and ending on a
+Sunday. The CDC defines epidemiological weeks as starting on a Sunday and
+ending on a Saturday. In either case, the end of the first epidemiological
+week of the year by definition must fall at least four days into the year. In
+other words, the first epidemiological week always begins on a date between
+December 29 and January 4.
+
+Every date can be assigned to a 7-day-long epidemiological week. Most years
+have 52 epidemiological weeks, but some have 53.
+
+Because some dates in epidemiological week 1 can fall within the previous
+calendar year, and dates in epidemiological week 52/53 can fall within the
+subsequent calendar year, it is necessary to specify both the epidemiological
+week number and an "epidemiological year" so that dates can be grouped
+correctly by year.
+
 To determine which epi-week a calendar date falls in, use
 \code{\link{epi_week}}.
 

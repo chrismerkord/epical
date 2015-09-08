@@ -4,10 +4,13 @@
 \alias{epi_year_start}
 \title{#' Start Dates of Epidemiological Years}
 \usage{
-epi_year_start(year)
+epi_year_start(year, system = "who")
 }
 \arguments{
 \item{year}{An object that can be coerced to a \code{numeric}}
+
+\item{system}{Either "who" or "cdc". Defauly is "who".
+See \code{\link{epi_week}} for details.}
 }
 \value{
 A \code{Date} vector

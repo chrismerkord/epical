@@ -4,11 +4,14 @@
 \alias{epi_week}
 \title{Date Conversion to Epidemiological Weeks}
 \usage{
-epi_week(x, ...)
+epi_week(x, system = "who", ...)
 }
 \arguments{
 \item{x}{A Date vector, or another vector that can be converted to Date using
 \code{as.Date}}
+
+\item{system}{Either "who" or "cdc". WHO epidemiological weeks start on
+Monday. CDC epidemiological weeks (MMWR weeks) start on Sunday}
 
 \item{...}{Additional parameters passed to \code{as.Date}}
 }
@@ -18,24 +21,10 @@ A data frame with columns labeled \code{epi_week} and
 \code{dplyr} package.
 }
 \description{
-Function to calculate the epidemiological weeks in which calendar dates fall.
+Function to calculate the epidemiological weeks in which one or more calendar
+dates fall.
 }
 \details{
-Epidemiological weeks, also called "epi-weeks" or "epi weeks", are a
-standardized method of assigning days to a week of the year. Epi-weeks are
-used by the WHO, CDC, and many other health organizations.
-
-Here we define an epi-week as starting on a Sunday and ending on a Saturday,
-with the first epi-week of the year ending on the first Saturday of the year
-that falls at least four days into the year. In other words, the first
-epi-week always begins on the Sunday that falls in the range of December 29
-to January 4.
-
-Because some dates in epi-week 1 can fall within the previous
-calendar year, and dates in epi-week 52/53 can fall within the next calendar
-year, it is necessary to specify both the epi-week number and an
-"epi-year" so that dates can be grouped correctly.
-
 The function first converts \code{date} to a \code{Date} object using the
 function \code{as.Date()}. I welcome suggestions for making this more robust.
 }

@@ -4,7 +4,7 @@
 \alias{epi_week_date}
 \title{Date Conversion from Epidemiological Weeks}
 \usage{
-epi_week_date(epi_week, epi_year, offset = 0)
+epi_week_date(epi_week, epi_year, offset = 0, system = "who")
 }
 \arguments{
 \item{epi_week}{An object that can be coerced to a \code{numeric}}
@@ -15,6 +15,9 @@ epi_week_date(epi_week, epi_year, offset = 0)
 is 0 in which case the function returns the date of the first day of each
 epi week. An offset of 6 would instead return the date of the last day of
 each epi week.}
+
+\item{system}{Either "who" or "cdc". Defauly is "who".
+See \code{\link{epi_week}} for details.}
 }
 \value{
 A \code{Date} vector

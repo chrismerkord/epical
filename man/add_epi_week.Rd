@@ -4,12 +4,15 @@
 \alias{add_epi_week}
 \title{Add Epi-weeks and Epi-years to a Data Frame}
 \usage{
-add_epi_week(data, date_col, ...)
+add_epi_week(data, date_col, system = "who", ...)
 }
 \arguments{
 \item{data}{A data frame}
 
 \item{date_col}{Name of date column}
+
+\item{system}{Either "who" or "cdc". Defauly is "who".
+See \code{\link{epi_week}} for details.}
 
 \item{...}{Additional parameters passed to \code{as.Date}}
 }
