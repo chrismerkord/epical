@@ -1,7 +1,7 @@
 Package: epical
 Type: Package
 Title: Convert between dates and epidemiological weeks/years
-Version: 0.1
+Version: 0.2
 Date: 2015-06-12
 Author: Chris Merkord
 Maintainer: Who to complain to <chris@merkord.com>
