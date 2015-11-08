@@ -85,7 +85,7 @@ epi_week <- function(x, system = "who", ...) {
       wday = wday(x - shift),                     # WHO: Mon.==1; CDC: Sun.==1
       week_start_date = x - (wday - 1),           # start of week containing x
       week_end_date = week_start_date + 6,        # end of week containing x
-      week_start_yday = yday(week_end_date),
+      week_start_yday = yday(week_start_date),
       week_end_yday = yday(week_end_date),
       # because start date could fall in prev year, use end date to identify epi
       # week 1. use start date to identify all other epi weeks
