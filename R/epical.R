@@ -79,7 +79,7 @@ epi_week <- function(x, system = "who", ...) {
   # to make the function faster, reduce input to distinct dates before
   # calculating epi-weeks and epi-years
   df2 <-
-    data_frame(x) %>%
+    tibble(x) %>%
     distinct() %>%
     mutate(
       wday = wday(x - shift),                     # WHO: Mon.==1; CDC: Sun.==1
@@ -102,7 +102,7 @@ epi_week <- function(x, system = "who", ...) {
 
   # merge the data frame of distinct dates back into the original
   suppressMessages(
-    data_frame(x) %>%
+    tibble(x) %>%
     left_join(df2) %>%
     select(epi_week, epi_year) # function returns these two columns
   )
@@ -207,7 +207,7 @@ epi_year_start <- function(year, system = "who") {
 #'
 
 epi_week_date <- function(epi_week, epi_year, offset = 0, system = "who") {
-  df_full <- dplyr::data_frame(epi_week, epi_year)
+  df_full <- tibble(epi_week, epi_year)
   na_rows_input <- nrow(df_full) - sum(complete.cases(df_full))
   df_distinct <- df_full %>% dplyr::distinct()
   z <- mapply(function(x, y) {
